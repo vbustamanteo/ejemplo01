@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "alumno")
@@ -28,6 +29,10 @@ public class Alumno {
 	@Column(name = "alu_vcNombre")
 	private String aluvcnombre;
 
+	@Transient
+	private Integer puerto;
+	
+	
 	public Integer getAluicodigo() {
 		return aluicodigo;
 	}
@@ -66,6 +71,14 @@ public class Alumno {
 
 	public void setAluvcnombre(String aluvcnombre) {
 		this.aluvcnombre = aluvcnombre;
+	}
+
+	public Integer getPuerto() {
+		return puerto;
+	}
+
+	public void setPuerto(Integer puerto) {
+		this.puerto = puerto;
 	}
 
 	

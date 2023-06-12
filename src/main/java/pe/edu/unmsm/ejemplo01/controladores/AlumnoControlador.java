@@ -1,40 +1,42 @@
 package pe.edu.unmsm.ejemplo01.controladores;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import pe.edu.unmsm.ejemplo01.entidades.Alumno;
-import pe.edu.unmsm.ejemplo01.repositorios.AlumnoRepositorio;
+import pe.edu.unmsm.ejemplo01.servicios.IAlumnoServicio;
 
-@Controller
-@RequestMapping(path = "/alumno")
+@RestController
 public class AlumnoControlador {
 	@Autowired
-	private AlumnoRepositorio alumnoRepositorio;
+	private Environment env;
+	
+	@Autowired
+	private IAlumnoServicio alumnoServicio;
 	
 	@GetMapping("/todos")
-	public @ResponseBody Iterable<Alumno> findAll() {
-		return alumnoRepositorio.findAll();
+	public List<Alumno> findAll() {
+		return alumnoServicio.findAll();
+	}
+
+	@GetMapping("/ver/{id}")
+	public Alumno codigo(@PathVariable Integer id) {
+		Alumno alumno = alumnoServicio.findById(id);
+		alumno.setPuerto(Integer.parseInt(env.getProperty("local.server.port")));
+		return alumno;
 	}
 	
-	@GetMapping("/por-codigo")
-	public @ResponseBody Alumno codigo(@RequestParam String aluvccodigo) {
-		Alumno alu = alumnoRepositorio.findByAluvccodigo(aluvccodigo);
-		if ( alu != null ) {
-			return alu;
-		}
-		return null;
+	@GetMapping("/codigo/{aluvccodigo}")
+	public Alumno codigo(@PathVariable String aluvccodigo) {
+		return alumnoServicio.findByAluvccodigo(aluvccodigo);
 	}
-	
+
+	/*
 	@PostMapping("/nuevo")
 	public @ResponseBody Integer add(
 			@RequestParam String aluvccodigo,
@@ -89,5 +91,5 @@ public class AlumnoControlador {
 		}
 		return 0;
 	}
-	
+	*/
 }
